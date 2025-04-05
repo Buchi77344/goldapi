@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register - Gold Marketplace</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .card {
+            background-color: #1a1a1a;
+            border: 1px solid #ffd700;
+            border-radius: 12px;
+            padding: 25px;
+        }
+        .btn-gold {
+            background-color: #ffd700;
+            color: #000;
+            border: none;
+        }
+        .btn-gold:hover {
+            background-color: #b8860b;
+            color: #fff;
+        }
+        label {
+            color: #ffd700;
+        }
+        a {
+            color: #ffd700;
+        }
+        a:hover {
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container d-flex justify-content-center align-items-center vh-100">
+        <div class="col-md-6">
+            <div class="card shadow-lg">
+                <h2 class="text-center mb-4">Join the Gold Marketplace</h2>
+                <form id="registerForm">
+                   
+                    <div class="form-group">
+                        <label for="first_name">Username</label>
+                        <input type="text" name="first_name" class="form-control" id="first_name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email address</label>
+                        <input type="email" name="email" class="form-control" id="email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" name="password" class="form-control" id="password" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password_confirm">Confirm Password</label>
+                        <input type="password" name="password_confirm" class="form-control" id="password_confirm" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="role">Account Type</label>
+                        <select name="role" class="form-control" id="role" required>
+                            <option value="buyer">Buyer</option>
+                            <option value="seller">Seller</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-gold btn-block">Register</button>
+                </form>
+
+                <div class="text-center mt-3">
+                    <p>Already have an account? <a href="">Login here</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', async function(e) {
+            e.preventDefault(); // Stop form from submitting normally
+
+            const first_name = document.getElementById('first_name').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const password_confirm = document.getElementById('password_confirm').value;
+            const role = document.getElementById('role').value;
+
+            // Basic check if passwords match
+            if (password !== password_confirm) {
+                alert('Passwords do not match!');
+                return;
+            }
+
+            try {
+                const response = await fetch('http://127.0.0.1:8000/signup/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        // Add Authorization header here if needed
+                    },
+                    body: JSON.stringify({
+                        first_name: first_name,
+                        email: email,
+                        password: password,
+                        role: role
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    alert('Registration successful!');
+                    // Optionally redirect to login page
+                    window.location.href = '/login/';
+                } else {
+                    alert('Error: ' + (data.message || 'Something went wrong.'));
+                    console.error('Error details:', data);
+                }
+
+            } catch (error) {
+                console.error('Fetch error:', error);
+                alert('Network error. Please try again.');
+            }
+        });
+    </script>
+</body>
+</html>
