@@ -1,172 +1,132 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Gold Marketplace | Home</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-  <style>
-    body {
-      background-color: #000;
-      color: #fff;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    .navbar {
-      background-color: #1a1a1a;
-      border-bottom: 1px solid #ffd700;
-    }
-    .navbar-brand {
-      color: #ffd700;
-      font-weight: bold;
-      font-size: 1.8rem;
-    }
-    .navbar-nav .nav-link {
-      color: #fff;
-    }
-    .navbar-nav .nav-link:hover {
-      color: #ffd700;
-    }
-    .btn-gold {
-      background-color: #ffd700;
-      color: #000;
-      border: none;
-      padding: 10px 20px;
-      font-weight: bold;
-    }
-    .btn-gold:hover {
-      background-color: #b8860b;
-      color: #fff;
-    }
-    .hero {
-      text-align: center;
-      padding: 100px 20px;
-      background: linear-gradient(to right, #111, #000);
-    }
-    .hero h1 {
-      font-size: 3.5rem;
-      color: #ffd700;
-    }
-    .hero p {
-      font-size: 1.3rem;
-      margin-top: 20px;
-    }
-    .section {
-      padding: 60px 20px;
-    }
-    .card-gold {
-      background-color: #1a1a1a;
-      border: 1px solid #ffd700;
-      color: #fff;
-      border-radius: 12px;
-    }
-    .card-gold h4 {
-      color: #ffd700;
-    }
-    .footer {
-      background-color: #111;
-      color: #aaa;
-      padding: 30px;
-      text-align: center;
-    }
-    .features-icon {
-      font-size: 3rem;
-      color: #ffd700;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <title>Register - Gold Marketplace</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .card {
+            background-color: #1a1a1a;
+            border: 1px solid #ffd700;
+            border-radius: 12px;
+            padding: 25px;
+        }
+        .btn-gold {
+            background-color: #ffd700;
+            color: #000;
+            border: none;
+        }
+        .btn-gold:hover {
+            background-color: #b8860b;
+            color: #fff;
+        }
+        label {
+            color: #ffd700;
+        }
+        a {
+            color: #ffd700;
+        }
+        a:hover {
+            color: #ffffff;
+        }
+    </style>
 </head>
 <body>
-  <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg">
-    <div class="container">
-      <a class="navbar-brand" href="#">GoldMarket</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ml-auto">
-          <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="#features">Features</a></li>
-          <li class="nav-item"><a class="nav-link" href="#categories">Categories</a></li>
-          <li class="nav-item"><a class="nav-link" href="#faq">FAQ</a></li>
-          <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
-          <li class="nav-item ml-3"><a href="" class="btn btn-gold">Register</a></li>
-        </ul>
-      </div>
+    <div class="container d-flex justify-content-center align-items-center vh-100">
+        <div class="col-md-6">
+            <div class="card shadow-lg">
+                <h2 class="text-center mb-4">Login</h2>
+                <form id="registerForm">
+                   
+                  
+
+                    <div class="form-group">
+                        <label for="email">Email address</label>
+                        <input type="email" name="email" class="form-control" id="email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" name="password" class="form-control" id="password" required>
+                    </div>
+
+                    
+
+                    
+
+                    <button type="submit" class="btn btn-gold btn-block">Register</button>
+                </form>
+
+                <div class="text-center mt-3">
+                    <p>Already have an account? <a href="">Login here</a></p>
+                </div>
+            </div>
+        </div>
     </div>
-  </nav>
 
-  <!-- Hero Section -->
-  <div class="hero">
-    <h1>Welcome to the Ultimate Gold Marketplace</h1>
-    <p>Buy and sell raw or crafted gold securely, with confidence and class.</p>
-    <a href="" class="btn btn-gold mt-3">Join Now</a>
-  </div>
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', async function(e) {
+            e.preventDefault(); // Stop form from submitting normally
 
-  <!-- Features Section -->
-  <section class="section text-center" id="features">
-    <div class="container">
-      <h2 class="text-gold mb-4">Platform Features</h2>
-      <div class="row">
-        <div class="col-md-4 mb-4">
-          <div class="card card-gold p-4">
-            <div class="features-icon mb-3">💳</div>
-            <h4>Secure Payments</h4>
-            <p>Encrypted and reliable payment gateway for buyers and sellers.</p>
-          </div>
-        </div>
-        <div class="col-md-4 mb-4">
-          <div class="card card-gold p-4">
-            <div class="features-icon mb-3">✅</div>
-            <h4>Verified Sellers</h4>
-            <p>Only trusted and validated gold companies are listed.</p>
-          </div>
-        </div>
-        <div class="col-md-4 mb-4">
-          <div class="card card-gold p-4">
-            <div class="features-icon mb-3">📦</div>
-            <h4>Fast Delivery</h4>
-            <p>Efficient logistics and delivery tracking across regions.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+           
 
-  <!-- Categories Section -->
-  <section class="section bg-dark" id="categories">
-    <div class="container text-center">
-      <h2 class="mb-5">Explore Categories</h2>
-      <div class="row">
-        <div class="col-md-6 mb-4">
-          <div class="card card-gold p-4">
-            <h4>Raw Gold</h4>
-            <p>Unprocessed gold from authentic sources ready for industry use.</p>
-          </div>
-        </div>
-        <div class="col-md-6 mb-4">
-          <div class="card card-gold p-4">
-            <h4>Crafted Gold</h4>
-            <p>Finished gold items including jewelry, coins, and bullion.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+            // Basic check if passwords match
+         
 
-  <!-- Call to Action -->
-  <section class="section text-center">
-    <h2>Become a Gold Seller</h2>
-    <p>Join the best platform to list and sell your gold products to verified buyers.</p>
-    <a href="" class="btn btn-gold">Register as a Seller</a>
-  </section>
+            try {
+                const response = await fetch('http://127.0.0.1:8000/login/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        // Add Authorization header here if needed
+                    },
+                    body: JSON.stringify({
+                       
+                        email: email,
+                        password: password,
+                       
+                    })
+                });
 
-  <!-- Footer -->
-  <div class="footer">
-    <p>&copy; 2025 Gold Marketplace. All rights reserved.</p>
-    <p><a href="#" style="color: #ffd700;">Privacy Policy</a> | <a href="#" style="color: #ffd700;">Terms of Use</a></p>
-  </div>
+                const data = await response.json();
 
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+                if (response.ok) {
+                    alert('Registration successful!');
+                    // Optionally redirect to login page
+                    window.location.href = '/login/';
+                } else {
+                    alert('Error: ' + (data.message || 'Something went wrong.'));
+                    console.error('Error details:', data);
+                }
+
+            } catch (error) {
+                console.error('Fetch error:', error);
+                alert('Network error. Please try again.');
+            }
+        });
+    </script>
 </body>
+
+
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+

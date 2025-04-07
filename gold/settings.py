@@ -163,14 +163,18 @@ else:  # Enable in development
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5500",  # Example: If running frontend on a local server
-    "http://127.0.0.1:5500",  # Another common local frontend setup
-    "https://yourfrontend.com",  # Your production frontend domain
+    "http://localhost:5173",  # Another common local frontend setup
+    "https://yourfrontend.com",
+    'http://127.0.0.1:5500' ,
+    # 'https://gemify-lac.vercel.app/' # Your production frontend domain
 ]
 
 CORS_ALLOW_CREDENTIALS = True
 
 CSRF_TRUSTED_ORIGINS = [
-    "http://127.0.0.1:5500",  # Allow CSRF requests from frontend
+    "http://127.0.0.1:5500", 
+     "http://localhost:5173",
+    'https://gemify-lac.vercel.app/', # Allow CSRF requests from frontend
 ]
 
 REST_FRAMEWORK = {
@@ -178,3 +182,19 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
 }
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# settings.py
+
+
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = 'smtp.zoho.com'
+# EMAIL_PORT = 587  # Use 465 if you're using SSL
+# EMAIL_USE_TLS = True  # Set to True for TLS
+# EMAIL_HOST_USER = 'onyebuchifestus77@gmail.com'  # Your Zoho email address
+# EMAIL_HOST_PASSWORD = 'KdLseFBHXD9J'
+# DEFAULT_FROM_EMAIL = 'onyebuchifestus77@gmail.com'
+# EMAIL_USE_TLS = True 
+
+# ADMIN_EMAIL = 'onyebuchifestus77@gmail.com'
