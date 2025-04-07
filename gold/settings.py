@@ -161,21 +161,18 @@ else:  # Enable in development
 
 
 
+CORS_ALLOWED_ORIGINS = ["*"]
+
+
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5500",  # Example: If running frontend on a local server
-    "http://localhost:5173",  # Another common local frontend setup
+    "http://localhost:5500",
+    "http://localhost:5173",
     "https://yourfrontend.com",
-    'http://127.0.0.1:5500' ,
-    # 'https://gemify-lac.vercel.app/' # Your production frontend domain
+    "https://gemify-lac.vercel.app",  # Your production domain
 ]
 
 CORS_ALLOW_CREDENTIALS = True
 
-CSRF_TRUSTED_ORIGINS = [
-    "http://127.0.0.1:5500", 
-     "http://localhost:5173",
-    'https://gemify-lac.vercel.app/', # Allow CSRF requests from frontend
-]
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
