@@ -161,8 +161,14 @@ else:  # Enable in development
 
 
 
-CORS_ALLOWED_ORIGINS = ["*"]
+CORS_ALLOWED_ORIGINS = [
+    'https://goldapi-usnx.onrender.com'
+]
 
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://goldapi-usnx.onrender.com',
+]
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5500",
