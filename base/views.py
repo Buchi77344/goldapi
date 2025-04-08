@@ -109,25 +109,42 @@ class VerifyEmail(APIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from django.contrib.auth import authenticate, login
+from rest_framework_simplejwt.tokens import RefreshToken
+
 class Login(APIView):
     def post(self, request):
         email = request.data.get('email')
         password = request.data.get('password')
 
         if not email or not password:
-            return Response({"error": "Email and password are required"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"error": "Email and password are required"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
         user = authenticate(request, username=email, password=password)
-        refresh = RefreshToken.for_user(user)  # Change username=email to work with email-based login
+
         if user is not None:
             login(request, user)
-            return Response({"message": "Login successful",
-                 'refresh':str(refresh),
-                'access': str(refresh.access_token)
-                             }, status=status.HTTP_200_OK)
+            refresh = RefreshToken.for_user(user)  # <-- Moved here
+            return Response(
+                {
+                    "message": "Login successful",
+                    "refresh": str(refresh),
+                    "access": str(refresh.access_token)
+                },
+                status=status.HTTP_200_OK
+            )
         else:
-            return Response({"error": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
-        
+            return Response(
+                {"error": "Invalid credentials"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
 
 class logoutapi(APIView):
     def post(self,request):
