@@ -29,6 +29,7 @@ urlpatterns = [
      path('verify/', VerifyEmail.as_view(),name='verify'),
     path('logout/', logoutapi.as_view(),name='logout'),
     path('seller-signup/', SellerRegistrationAPIView.as_view(), name='seller-signup'),
+    path('api/google-login/', GoogleLoginView.as_view(), name='google-login')
     # path('contact/', views.contact, name='contact'),
     # path('services/', views.services, name='services'),
     # path('portfolio/', views.portfolio, name='portfolio'),

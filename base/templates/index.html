@@ -1,132 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Register - Gold Marketplace</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            background-color: #000000;
-            color: #ffffff;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        .card {
-            background-color: #1a1a1a;
-            border: 1px solid #ffd700;
-            border-radius: 12px;
-            padding: 25px;
-        }
-        .btn-gold {
-            background-color: #ffd700;
-            color: #000;
-            border: none;
-        }
-        .btn-gold:hover {
-            background-color: #b8860b;
-            color: #fff;
-        }
-        label {
-            color: #ffd700;
-        }
-        a {
-            color: #ffd700;
-        }
-        a:hover {
-            color: #ffffff;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Google Login Example</title>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
-    <div class="container d-flex justify-content-center align-items-center vh-100">
-        <div class="col-md-6">
-            <div class="card shadow-lg">
-                <h2 class="text-center mb-4">Login</h2>
-                <form id="registerForm">
-                   
-                  
 
-                    <div class="form-group">
-                        <label for="email">Email address</label>
-                        <input type="email" name="email" class="form-control" id="email" required>
-                    </div>
+  <div id="g_id_onload"
+       data-client_id="492385262227-4pp9t7k2sa3rvmiu2hgbvs10i5ma1mpc.apps.googleusercontent.com"
+       data-context="signin"
+       data-ux_mode="popup"
+       data-callback="handleCredentialResponse"
+       data-auto_prompt="false">
+  </div>
 
-                    <div class="form-group">
-                        <label for="password">Password</label>
-                        <input type="password" name="password" class="form-control" id="password" required>
-                    </div>
+  <div class="g_id_signin"
+       data-type="standard"
+       data-shape="rectangular"
+       data-theme="outline"
+       data-text="signin_with"
+       data-size="large">
+  </div>
 
-                    
+  <script>
+    function handleCredentialResponse(response) {
+      console.log("Encoded ID token: " + response.credential);
 
-                    
+      // Send the ID token to your backend
+      fetch('http://127.0.0.1:8000/api/google-login/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          id_token: response.credential  // Change 'token' to 'id_token'
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Success:', data);
+        // You can store the returned JWT here (if your backend sends it)
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+    }
+</script>
 
-                    <button type="submit" class="btn btn-gold btn-block">Register</button>
-                </form>
-
-                <div class="text-center mt-3">
-                    <p>Already have an account? <a href="">Login here</a></p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        document.getElementById('registerForm').addEventListener('submit', async function(e) {
-            e.preventDefault(); // Stop form from submitting normally
-
-            
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-           
-
-            // Basic check if passwords match
-         
-
-            try {
-                const response = await fetch('http://127.0.0.1:8000/login/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        // Add Authorization header here if needed
-                    },
-                    body: JSON.stringify({
-                       
-                        email: email,
-                        password: password,
-                       
-                    })
-                });
-
-                const data = await response.json();
-
-                if (response.ok) {
-                    alert('Registration successful!');
-                    // Optionally redirect to login page
-                    window.location.href = '/login/';
-                } else {
-                    alert('Error: ' + (data.message || 'Something went wrong.'));
-                    console.error('Error details:', data);
-                }
-
-            } catch (error) {
-                console.error('Fetch error:', error);
-                alert('Network error. Please try again.');
-            }
-        });
-    </script>
 </body>
-
-
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-

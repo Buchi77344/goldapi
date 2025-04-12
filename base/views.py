@@ -23,74 +23,94 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from .models import CustomUser  # Adjust the import to your project
 from django.conf import settings 
 
+import random
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from django.core.mail import EmailMessage, get_connection
+from rest_framework_simplejwt.tokens import RefreshToken
+from .models import CustomUser  # Import your CustomUser model properly
+
 class SignupView(APIView):
     def post(self, request):
-        first_name = request.data.get('first_name')
-        email = request.data.get('email')
-        password = request.data.get('password')
-        
-
-        if not first_name or not email or not password :
-            return Response(
-                {'error': 'All fields are required.'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
-        if CustomUser.objects.filter(email=email).exists():
-            return Response(
-                {'error': 'Email already exists.'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
-        if CustomUser.objects.filter(username=email).exists():
-            return Response(
-                {'error': 'Username already exists.'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
-        code = random.randint(100000, 999999)
-
         try:
+            # Get data from request
+            first_name = request.data.get('first_name')
+            email = request.data.get('email')
+            password = request.data.get('password')
+
+            # Validate input
+            if not first_name or not email or not password:
+                return Response(
+                    {'error': 'All fields are required.'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+            # Check if user with email or username exists
+            if CustomUser.objects.filter(email=email).exists():
+                return Response(
+                    {'error': 'Email already exists.'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+            if CustomUser.objects.filter(username=email).exists():
+                return Response(
+                    {'error': 'Username already exists.'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+            # Generate a random verification code
+            code = random.randint(100000, 999999)
+
+            # Create the user
             user = CustomUser.objects.create_user(
                 username=email,
                 first_name=first_name,
                 email=email,
                 password=password,
-                code=code ,
-                user_type='buyer' 
             )
+
+            # Save additional fields if they exist in your model
+            user.code = code
+            user.user_type = 'buyer'
+            user.save()
+
+            # Send verification email
+            try:
+                connection = get_connection()  # Uses SMTP settings from settings.py
+                email_message = EmailMessage(
+                    subject='Your Verification Code',
+                    body=f'Your verification code is: {code}',
+                    from_email='from@example.com',  # Your sender email
+                    to=[email],
+                    connection=connection,
+                )
+                email_message.send(fail_silently=False)
+            except Exception as e:
+                # If email sending fails, delete the created user
+                user.delete()
+                return Response(
+                    {'error': 'Failed to send verification email.', 'details': str(e)},
+                    status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                )
+
+            # Generate JWT tokens
+            refresh = RefreshToken.for_user(user)
+
+            return Response(
+                {
+                    'refresh': str(refresh),
+                    'access': str(refresh.access_token)
+                },
+                status=status.HTTP_201_CREATED
+            )
+
         except Exception as e:
             return Response(
-                {'error': 'Error creating user.', 'details': str(e)},
+                {'error': 'An unexpected error occurred.', 'details': str(e)},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
-        # Sending Email using EmailMessage and EmailBackend
-        try:
-            connection = get_connection()  # Uses SMTP settings from settings.py
-            email_message = EmailMessage(
-                subject='Your Verification Code',
-                body=f'Your verification code is: {code}',
-                from_email='onyebuchi@gmail.com',  # your configured sender email
-                to=[email],
-                connection=connection,
-            )
-            email_message.send(fail_silently=False)
-        except Exception as e:
-            user.delete()  # Rollback user if email fails
-            return Response(
-                {'error': 'Failed to send verification email.', 'details': str(e)},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
-
-        refresh = RefreshToken.for_user(user)
-        return Response(
-            {
-                'refresh': str(refresh),
-                'access': str(refresh.access_token)
-            },
-            status=status.HTTP_201_CREATED
-        )
 
 
 class VerifyEmail(APIView):
@@ -209,3 +229,59 @@ class SellerRegistrationAPIView(APIView):
 
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+
+
+# views.py
+
+from rest_framework_simplejwt.tokens import RefreshToken
+
+from google.oauth2 import id_token
+from google.auth.transport import requests as google_requests
+
+GOOGLE_CLIENT_ID = '492385262227-4pp9t7k2sa3rvmiu2hgbvs10i5ma1mpc.apps.googleusercontent.com'
+
+class GoogleLoginView(APIView):
+    def post(self, request):
+        token = request.data.get('id_token')
+
+        if not token:
+            return Response({'error': 'No token provided'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            # Verify the token
+            idinfo = id_token.verify_oauth2_token(token, google_requests.Request(), GOOGLE_CLIENT_ID)
+
+            # ID token is valid
+            email = idinfo.get('email')
+            first_name = idinfo.get('given_name')
+            last_name = idinfo.get('family_name')
+
+            if not email:
+                return Response({'error': 'Email not available'}, status=status.HTTP_400_BAD_REQUEST)
+
+            # Check if user exists
+            user, created = CustomUser.objects.get_or_create(email=email, defaults={
+                'username': email.split('@')[0],  # Or some unique value
+                'first_name': first_name or '',
+                'last_name': last_name or '',
+            })
+
+            # Issue your tokens (using JWT here)
+            refresh = RefreshToken.for_user(user)
+
+            return Response({
+                'refresh': str(refresh),
+                'access': str(refresh.access_token),
+                'user': {
+                    'id': user.id,
+                    'email': user.email,
+                    'first_name': user.first_name,
+                    'last_name': user.last_name,
+                }
+            })
+
+        except ValueError:
+            # Invalid token
+            return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
